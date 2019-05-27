@@ -142,7 +142,8 @@ public class XcodePostBuild : EditorWindow
             ShowProjectDescription();
             ShowSettings();
 
-            if(GUILayout.Button("Clear path")) {
+            if (GUILayout.Button("Clear path"))
+            {
                 XcodeProjectPath = PATH_PLACEHOLDER;
                 EditorGUILayout.TextField("Xcode Project File", XcodeProjectPath);
             }
@@ -156,7 +157,6 @@ public class XcodePostBuild : EditorWindow
     {
         GUILayout.Label("Settings", EditorStyles.boldLabel);
 
-        // string xcodeProjectFile = PathExt.Abs2Rel(XcodeProjectPath);
         string xcodeProjectFile = XcodeProjectPath;
 
         if (GUILayout.Button("Browse..."))
@@ -177,8 +177,6 @@ public class XcodePostBuild : EditorWindow
             XcodeProjectPath = PATH_PLACEHOLDER;
         }
 
-        // Instead of defining the xcode project root and name separately, have the user
-        // select the .xcodeproj file and then figure them out from there.
         EditorGUILayout.TextField("Xcode Project File", XcodeProjectPath);
     }
 
@@ -337,20 +335,37 @@ In order for this to work, necessary changes to the target Xcode Swift project a
             librariesPath);
 
 
-		var targetGuid = pbx.TargetGuidByName(XcodeProjectName);
+        var targetGuid = pbx.TargetGuidByName(XcodeProjectName);
+
+        pbx.GetBuildPhaseName("");
+
+        string[] phases = pbx.GetAllBuildPhasesForTarget(targetGuid);
+        var phaseNames = new List<string>();
+
+        foreach (var p in phases)
+            phaseNames.Add(pbx.GetBuildPhaseName(p));
+
+        string removeScript = "Remove excluded files";
+
+        if (!phaseNames.Contains(removeScript))
+        {
+            pbx.InsertShellScriptBuildPhase(0, targetGuid, removeScript, "/bin/sh",
+@"echo ""Syncing code from $UNITY_IOS_EXPORT_PATH...""
+rsync -rc --exclude-from=$PRODUCT_NAME/Unity/rsync_exclude --delete $UNITY_IOS_EXPORT_PATH/Classes/ $PRODUCT_NAME/Unity/Classes/
+rsync -rc --exclude-from=$PRODUCT_NAME/Unity/rsync_exclude --delete $UNITY_IOS_EXPORT_PATH/Libraries/ $PRODUCT_NAME/Unity/Libraries/");
+        }
+
+        string copyData = "Sync data with unity output project";
+
+        if (!phaseNames.Contains(copyData))
+        {
+            pbx.AddShellScriptBuildPhase(targetGuid, "Sync data with unity output project", "/bin/sh",
+@"echo ""Syncing data from $UNITY_IOS_EXPORT_PATH...""
+rm -rf ""$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Data""
+cp -Rf ""$UNITY_IOS_EXPORT_PATH/Data"" ""$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Data""");
+        }
 
         pbx.AddFrameworkToProject(targetGuid, "AVKit.framework", false);
-
-        pbx.InsertShellScriptBuildPhase(0, targetGuid, "Remove excluded files", "/bin/sh", 
-        @"echo ""Syncing code from $UNITY_IOS_EXPORT_PATH...""
-        rsync -rc --exclude-from=$PRODUCT_NAME/Unity/rsync_exclude --delete $UNITY_IOS_EXPORT_PATH/Classes/ $PRODUCT_NAME/Unity/Classes/
-        rsync -rc --exclude-from=$PRODUCT_NAME/Unity/rsync_exclude --delete $UNITY_IOS_EXPORT_PATH/Libraries/ $PRODUCT_NAME/Unity/Libraries/");
-
-        pbx.AddShellScriptBuildPhase(targetGuid, "Sync data with unity output project", "/bin/sh",  
-        @"echo ""Syncing data from $UNITY_IOS_EXPORT_PATH...""
-        rm -rf ""$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Data""
-        cp -Rf ""$UNITY_IOS_EXPORT_PATH/Data"" ""$TARGET_BUILD_DIR/$PRODUCT_NAME.app/Data""");
-
         pbx.WriteToFile(pbxPath);
     }
 

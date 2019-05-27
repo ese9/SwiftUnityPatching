@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class NativeBridge : MonoBehaviour
 {
-    [SerializeField] private Toggle toggle;
+    [SerializeField] private Toggle toggle = null;
     private bool skipToggleChangeEvent;
 
     void Awake()
