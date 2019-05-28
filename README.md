@@ -1,9 +1,9 @@
-# Embed unity in swift project
+# Embed a Unity project into an iOS native project
 
 Great thanks to [jiulongw](https://github.com/jiulongw/swift-unity).
-Almost all the work was done in his project. I fixed some bugs, improve post build logic and work around new versions of Unity and XCode
+Almost all done in his project. I just fixed some bugs, improve post build logic and work around new versions of Unity and XCode
 
-This demo supports Unity 2019.1.+ and XCode 10.2 (Swift 5)
+This demo supports Unity 2019.1.+ and XCode 10.2 (iOS 12.2, Swift 5)
 
 ## How to build demo:
 1. Open Unity project switch target to iOS. Launch Demo scene and build project in any folder.
