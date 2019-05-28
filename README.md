@@ -18,7 +18,9 @@ This demo supports Unity 2019.1.+ and XCode 10.2 (Swift 5)
 3. Update AppDelegate.swift and other files with logic you want (see sample code in [demo](https://github.com/ese9/SwiftUnityPatching/tree/master/ios-demo-project/DemoProject))
 
 ### Unity
-Copy this [post build script](https://github.com/ese9/SwiftUnityPatching/blob/master/unity-demo-project/Assets/SwiftPatching/Editor/XcodePostBuild.cs) to your Unity project's Assets folder. Put anywhere you like but since this is an editor script, Unity requires it to be under a folder named Editor.
-Build project and select XCode project for patching after that.
+1. Copy this [post build script](https://github.com/ese9/SwiftUnityPatching/blob/master/unity-demo-project/Assets/SwiftPatching/Editor/XcodePostBuild.cs) to your Unity project's Assets folder. Put anywhere you like but since this is an editor script, Unity requires it to be under a folder named Editor.
+2. Build project and select XCode project for patching after that.
 
-You no need to patch it every time after unity build. Just chose the same folder for unity build and XCode project will automatically update
+### Notes
+- No need to patch it every time after unity build. Just chose the same folder for unity build and XCode project will automatically update
+- XCode build can fail first time. Press `cmnd + shift + K` and run build again.
