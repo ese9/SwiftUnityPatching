@@ -21,6 +21,6 @@ This demo supports Unity 2019.1.+ and XCode 10.2 (iOS 12.2, Swift 5)
 1. Copy this [post build script](https://github.com/ese9/SwiftUnityPatching/blob/master/unity-demo-project/Assets/SwiftPatching/Editor/XcodePostBuild.cs) to your Unity project's Assets folder. Put anywhere you like but since this is an editor script, Unity requires it to be under a folder named Editor.
 2. Build project and select XCode project for patching after that.
 
-### Notes
+## Notes
 - No need to patch it every time after unity build. Just chose the same folder for unity build and XCode project will automatically update
 - XCode build can fail first time. Press `cmnd + shift + K` and run build again.
