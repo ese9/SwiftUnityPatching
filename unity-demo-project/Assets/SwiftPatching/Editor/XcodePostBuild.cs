@@ -141,12 +141,6 @@ public class XcodePostBuild : EditorWindow
         {
             ShowProjectDescription();
             ShowSettings();
-
-            if (GUILayout.Button("Clear path"))
-            {
-                XcodeProjectPath = PATH_PLACEHOLDER;
-                EditorGUILayout.TextField("Xcode Project File", XcodeProjectPath);
-            }
         }
 
         ShowRerunButton();
